@@ -39,6 +39,11 @@ mkdir -p "$work/etc/apt"
 echo "deb $JC_REPO_URL stable main" > "$work/etc/apt/sources.list"
 rm -rf "$work/etc/apt/sources.list.d"
 rm -rf "$work/etc/termux/chosen_mirrors"
+# pkg 가 "미러 하나 고름" 으로 보게 — 없으면 지운 지역 폴더(asia·europe…)를 find 하다 오류를 낸다
+# (부트스트랩 zip 은 심볼릭 링크를 SYMLINKS.txt 에 "대상←경로" 로 적는다)
+grep -v '←\./etc/termux/chosen_mirrors$' "$work/SYMLINKS.txt" > "$work/SYMLINKS.new" || true
+printf '%s\n' 'mirrors/default←./etc/termux/chosen_mirrors' >> "$work/SYMLINKS.new"
+mv "$work/SYMLINKS.new" "$work/SYMLINKS.txt"
 
 # 3) 명령 기록을 명령마다 바로 저장한다 — 앱이 세션을 되살리는 일이 잦아 셸이 정상 종료하지 못할 때가 많다
 mkdir -p "$work/etc/profile.d"
@@ -59,7 +64,7 @@ EOF
 [ -f "$work/share/termux-keyring/jc-terminal-packages.gpg" ] || {
 	echo "[!] 부트스트랩에 우리 저장소 키가 없습니다 (termux-keyring 패치 확인)" >&2; exit 1; }
 
-# 5) 다시 묶는다 (SYMLINKS.txt 는 그대로)
+# 5) 다시 묶는다
 rm -f "$zip_path"
 (cd "$work" && zip -qr9 -X "$zip_path" ./*)
 echo "[*] 저장소를 $JC_REPO_URL 로 돌렸습니다: $(basename "$zip_path")"
