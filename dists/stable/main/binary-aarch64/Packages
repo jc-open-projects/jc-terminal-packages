@@ -842,6 +842,37 @@ SHA1: dad05ed12b3f788978db5ecd784af69e24b1d8f0
 SHA256: 47077a6226a7cc73162973e787f38b3a0536d5b643f8ac906ac578290313a81a
 SHA512: ced039af1883178e81f018997d5e2a48fbe363f22cdbf48027eeeb39fedb86555396d33da5c41748f79218a21e3eae4f84342c139c4de0413301227c4b5a546c
 
+Package: libandroid-execinfo-static
+Architecture: aarch64
+Installed-Size: 36
+Maintainer: @termux
+Version: 0.1-3
+Homepage: https://man7.org/linux/man-pages/man3/backtrace.3.html
+Depends: libandroid-execinfo (= 0.1-3)
+Description: Static libraries for libandroid-execinfo
+Filename: dists/stable/main/binary-aarch64/libandroid-execinfo-static_0.1-3_aarch64.deb
+Size: 2416
+MD5Sum: 71c56bb54a82a965a22be94cf1b37927
+SHA1: 2b48d34e9210a21f743c6b24ddebc305088d1131
+SHA256: 551894f201d3cc50449a0ef09ae474ea347764a089ea8b35a2104aac97382713
+SHA512: 4e30526e8b797c5c635437d8dc3bf83d4a401ff40cf95dc719670229a7bc8f26b4fd39e3e3c20b8d1021cbc70195538d4e034d3635694d536631340792d655bb
+
+Package: libandroid-execinfo
+Architecture: aarch64
+Installed-Size: 88
+Maintainer: @termux
+Version: 0.1-3
+Homepage: https://man7.org/linux/man-pages/man3/backtrace.3.html
+Conflicts: libexecinfo
+Provides: libexecinfo
+Description: Shared library for the backtrace system function
+Filename: dists/stable/main/binary-aarch64/libandroid-execinfo_0.1-3_aarch64.deb
+Size: 15268
+MD5Sum: b56d6e95699bfd5662dd365827e5b520
+SHA1: 9d77f04b9c9b7edbe76e2fcfd8037ec34674fcec
+SHA256: c84bbe690d874ac546d924f5582cb518f0ec4f7758706e5b9c495978ab5cd4b1
+SHA512: 9dae79c1cdec653e6953d319d70f6e5973da6d7ad27b64e584603e722c996651d5f571a2236d080adbcfe452152e2ba2dba2ed5e3718aa38fb651dc434745024
+
 Package: libandroid-glob-static
 Architecture: aarch64
 Installed-Size: 40
@@ -1890,6 +1921,37 @@ SHA1: 4a58e13bd89eed3ad9839cc6e5c854f1e1185f21
 SHA256: 072f4664c452fdde054bd56f1eddfe0a36e1bf49dc763ccc628f0c13059e4476
 SHA512: fcf8cbd0bd82cee9dee58a217d1d4e476d28a9d1e051219c770d12aefd9447ffe702dfa387630daee25bcc479090e0a4b9371179e8dfc56a65601dea5e044d76
 
+Package: libsodium-static
+Architecture: aarch64
+Installed-Size: 648
+Maintainer: @termux
+Version: 1.0.22-1
+Homepage: https://libsodium.org/
+Depends: libsodium (= 1.0.22-1)
+Description: Static libraries for libsodium
+Filename: dists/stable/main/binary-aarch64/libsodium-static_1.0.22-1_aarch64.deb
+Size: 150668
+MD5Sum: 32971dee88dcc0b88b0ea57b3c4134f5
+SHA1: e8abedc71ebb9e807f3ed9d94316884897fda3a2
+SHA256: 9a756521fb7f0362a32127ab90926c87d723d2870e7d8b6f692d81ab933d8bd5
+SHA512: 504a5ddf2beaad55f185ddfa565ec71ece92387d35de5d7ec29ffc075e7ceed3e9fded6a35f60d027bc670040b72d4805cba0bbd01318fdfda66dd5d90df1ed5
+
+Package: libsodium
+Architecture: aarch64
+Installed-Size: 724
+Maintainer: @termux
+Version: 1.0.22-1
+Homepage: https://libsodium.org/
+Breaks: libsodium-dev
+Replaces: libsodium-dev
+Description: Network communication, cryptography and signaturing library
+Filename: dists/stable/main/binary-aarch64/libsodium_1.0.22-1_aarch64.deb
+Size: 150924
+MD5Sum: c9c6c7ab25a222632cee37d3b91aabee
+SHA1: 5a9558bc4b7e687dff4aed8492f59587945c5c6f
+SHA256: 15def9c62ee2312e5a175e6b387c598a150d092d7cc8f3dda69df79fedced011
+SHA512: 61226e40c788cc9c115b7097dfd3484ab485145b803682457ff5737a8606211502e57d0edd14aed96599accf93bc0ce6dd8ec44b97b1d0c7f1739c894db13aef
+
 Package: libsqlite-static
 Architecture: aarch64
 Installed-Size: 1768
@@ -2415,6 +2477,37 @@ SHA1: 6ad731559da6372afd22e008adc48851f229170b
 SHA256: ec3d697e5217b6e9203377a1c19bcf7d9fa6a6c84f8973dd5c160d65aa403df2
 SHA512: 2171181386da484942f7d5e099437876b95b1941cb06751b1406396be21ba5936564bfcdd1755a9f15ba776e0738e92e26eccb534cba3b749f4c1ddfb892ee76
 
+Package: libyaml-static
+Architecture: aarch64
+Installed-Size: 188
+Maintainer: @termux
+Version: 0.2.5-5
+Homepage: https://pyyaml.org/wiki/LibYAML
+Depends: libyaml (= 0.2.5-5)
+Description: Static libraries for libyaml
+Filename: dists/stable/main/binary-aarch64/libyaml-static_0.2.5-5_aarch64.deb
+Size: 42964
+MD5Sum: 6558f0e704ad2798649d8c8da86fc009
+SHA1: dd68fbd94a9f3707434bc4ca512a6e7c617430af
+SHA256: b409f25b3a8cfcfb0db7f2c69731712520460404abc276e5cc586c7e761da944
+SHA512: 5f2fbbcdce9fe9bc651396504ec0b07d438e9e303c08d99f9ca15210f5f5dfe949253307cf3394525981acc23f0a3f145ed353c1d766b0bf4c69b69b7a0cc8ec
+
+Package: libyaml
+Architecture: aarch64
+Installed-Size: 208
+Maintainer: @termux
+Version: 0.2.5-5
+Homepage: https://pyyaml.org/wiki/LibYAML
+Breaks: libyaml-dev
+Replaces: libyaml-dev
+Description: LibYAML is a YAML 1.1 parser and emitter written in C
+Filename: dists/stable/main/binary-aarch64/libyaml_0.2.5-5_aarch64.deb
+Size: 46532
+MD5Sum: 2d5e6f0e44420886c125d6b3a3961a03
+SHA1: c228f06ac69e292a3158e20b2cd0a9b214218736
+SHA256: 94ac8b70ead5952d9c32c6b70cc710f30a755cc065ac3d446134d4def6079d5a
+SHA512: 7e0ed4cca6761177dc0bd492deea03b19e561a67fc730d75c778780e319e8aea4725ea9117def725550c7a166f6001c22c87ce86681290ee14629b0e9836b6d8
+
 Package: lsof-static
 Architecture: aarch64
 Installed-Size: 260
@@ -2444,6 +2537,37 @@ MD5Sum: 35b96732be35c35f5b6c209e1ac93cd2
 SHA1: 3b02f52ea44c23bfe9ca3216747864e18d9c4d5c
 SHA256: 79c3a2ed0d33ca6d383f359a0e4a29740cc4b2049e37ec7e7d1f0a871ed56b4c
 SHA512: 0a001e2df4d4dab27b157fea10150e9d54cd1de84fd7c79a4d743d87ae9009a99fd8924cb265d59618b8f508a3cf4e1e1a56cc23fd6e3bd32fa3463e065acb64
+
+Package: luajit-static
+Architecture: aarch64
+Installed-Size: 692
+Maintainer: @termux
+Version: 1:2.1.1788856981+gc6ffc14
+Homepage: https://luajit.org/
+Depends: luajit (= 1:2.1.1788856981+gc6ffc14)
+Description: Static libraries for luajit
+Filename: dists/stable/main/binary-aarch64/luajit-static_1:2.1.1788856981+gc6ffc14_aarch64.deb
+Size: 225320
+MD5Sum: 167b1521e489beecbb05915179d47074
+SHA1: ef12924c225e27bbb54fd402f7cf9db5ffb5c1c2
+SHA256: bfe1a7aa031d5b9b3ccd5824f32a39ecb490240941e71c6e0a80f02ba873b648
+SHA512: abbad668ef8136ae6c0b84b10549577809518b8716169f95cf3eb0c1218008443f3ffe6c936530db0cd422aeb4f8b3f5d4139ec372860fc03e2632f9432a3a7d
+
+Package: luajit
+Architecture: aarch64
+Installed-Size: 1352
+Maintainer: @termux
+Version: 1:2.1.1788856981+gc6ffc14
+Homepage: https://luajit.org/
+Breaks: libluajit-dev, libluajit
+Replaces: libluajit-dev, libluajit
+Description: Just-In-Time Compiler for Lua
+Filename: dists/stable/main/binary-aarch64/luajit_1:2.1.1788856981+gc6ffc14_aarch64.deb
+Size: 293536
+MD5Sum: f257dac16f7c0d88ce2ed1d25c86f99e
+SHA1: 761990c02e0f6113b13a88147e6114f68c3a5889
+SHA256: 2b51472631c43965a9ae0d20a1659d1b57aefed7da3daf634efe46e34642310d
+SHA512: 528429427d48b3a9f98ff308bfe383caa46adf37b078d03d5d6ec6865faf0dfff8547c78973e9df1eafe568213f2fe0e00b1f73234cf35860427fe64a9a8cc78
 
 Package: lz4
 Architecture: aarch64
