@@ -55,6 +55,9 @@ jobs:
             "") PKGS="$(echo $JC_BOOTSTRAP_PACKAGES $JC_BOOTSTRAP_EXTRA)" ;;
             repo-extra) PKGS="$(echo $JC_REPO_EXTRA)" ;;
           esac
+          # 하위 패키지는 상위 레시피로 (curl → libcurl, clang → libllvm), 겹치면 한 번만
+          for m in $JC_RECIPE_MAP; do PKGS="$(echo " $PKGS " | sed "s/ ${m%%:*} / ${m##*:} /g")"; done
+          PKGS="$(echo $PKGS | tr ' ' '\n' | awk '!seen[$0]++' | tr '\n' ' ')"
           {
             echo "packages=$(echo $PKGS)"
             echo "ref=$JC_TERMUX_PACKAGES_REF"
