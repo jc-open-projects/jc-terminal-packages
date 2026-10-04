@@ -73,6 +73,15 @@ if [ -d "$kr" ] && ! grep -q "jc-terminal-packages.gpg" "$kr/build.sh"; then
 	echo "[*] termux-keyring 에 우리 공개 키를 더했습니다"
 fi
 
+# 5. 도구 모음을 fuse-overlayfs 로 겹치지 않고 처음 한 번 복사한다 — 러너 컨테이너에 /dev/fuse·SYS_ADMIN 을
+#    주지 않기 위해서 (공개 저장소의 러너, runner/README.md). 디스크를 몇 GB 더 쓴다.
+tc="$tp/scripts/build/toolchain/termux_setup_toolchain_30.sh"
+if [ -f "$tc" ] && grep -q 'fuse-overlayfs' "$tc" && ! grep -q 'JC Terminal: overlay 대신 복사' "$tc"; then
+	perl -0pi -e 's|\tif ! mountpoint -q "\$\{TERMUX_STANDALONE_TOOLCHAIN\}"; then\n\t\tfuse-overlayfs \\\n.*?\n\tfi\n|\t# JC Terminal: overlay 대신 복사 (packaging/patch-termux-packages.sh)\n\tif [ ! -f "\${TERMUX_STANDALONE_TOOLCHAIN}/.jc-copied" ]; then\n\t\tcp -a "\${NDK}/toolchains/llvm/prebuilt/linux-x86_64/." "\${TERMUX_STANDALONE_TOOLCHAIN}/"\n\t\ttouch "\${TERMUX_STANDALONE_TOOLCHAIN}/.jc-copied"\n\tfi\n|s' "$tc"
+	grep -q 'JC Terminal: overlay 대신 복사' "$tc" || { echo "[!] 도구 모음 overlay 를 바꾸지 못했습니다 — 스크립트가 바뀐 것 같습니다" >&2; exit 1; }
+	echo "[*] 도구 모음을 overlay 대신 복사하게 바꿨습니다"
+fi
+
 # 패치가 실제로 경로에 반영되는지 확인한다 (bash 4 이상 — properties.sh 가 연관 배열을 쓴다)
 bash_major="$(bash -c 'echo ${BASH_VERSINFO[0]}')"
 if [ "${bash_major:-0}" -lt 4 ]; then
