@@ -1,0 +1,227 @@
+name: Packages and bootstrap
+
+# JC Terminal V2 패키지를 우리 prefix(/data/data/com.jc.terminal2/files/usr)로 굽고, 서명한 apt 저장소(GitHub Pages)와
+# 부트스트랩 zip(Releases)을 만든다 — jc-terminal-v2 DEC-010~014 (docs/03 §6.1).
+# JC Terminal 1판(jc-terminal-android)의 jc_packages.yml 을 바탕으로 했다 (우리가 쓴 워크플로).
+#
+# 수동 실행만 한다 — 공개 저장소의 self-hosted 러너이므로 포크 PR 이 돌리지 못하게 (DEC-011).
+# packages 를 비우면 부트스트랩 묶음(JC_BOOTSTRAP_PACKAGES + JC_BOOTSTRAP_EXTRA)을 굽는다.
+# 저장소에만 올리는 것(JC_REPO_EXTRA)은 packages 에 적어 따로 돌린다 — clang 처럼 오래 걸리는 것이 있다.
+
+on:
+  workflow_dispatch:
+    inputs:
+      packages:
+        description: '구울 패키지 (공백 구분, 비우면 부트스트랩 묶음) · "repo-extra" = JC_REPO_EXTRA'
+        type: string
+        default: ''
+      force_rebuild:
+        description: '다시 굽기: none / listed(-f) / all(-F, 의존성까지)'
+        type: choice
+        default: none
+        options: [none, listed, all]
+      publish_repo:
+        description: 'apt 저장소 갱신·서명·푸시'
+        type: boolean
+        default: true
+      make_bootstrap:
+        description: '부트스트랩 zip 만들기·서명·릴리스'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: packages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: [self-hosted, jc-pkg-builder]
+    timeout-minutes: 4320   # clang 등 — self-hosted 는 최대 5일
+    env:
+      ARCH: aarch64
+      TP: /home/builder/termux-packages
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 설정 읽기
+        id: cfg
+        run: |
+          . packaging/jc-packages.conf
+          PKGS="${{ inputs.packages }}"
+          case "$PKGS" in
+            "") PKGS="$(echo $JC_BOOTSTRAP_PACKAGES $JC_BOOTSTRAP_EXTRA)" ;;
+            repo-extra) PKGS="$(echo $JC_REPO_EXTRA)" ;;
+          esac
+          {
+            echo "packages=$(echo $PKGS)"
+            echo "ref=$JC_TERMUX_PACKAGES_REF"
+            echo "repo=$JC_TERMUX_PACKAGES_REPO"
+            echo "repo_url=$JC_REPO_URL"
+            echo "prefix=$JC_PREFIX"
+            echo "pages=$JC_PAGES_BRANCH"
+            echo "extra=$(echo $JC_BOOTSTRAP_EXTRA | tr ' ' ',')"
+          } >> "$GITHUB_OUTPUT"
+          echo "구울 패키지: $PKGS"
+
+      # 체크아웃은 볼륨에 두고 다시 쓴다 — output/ 의 deb 가 실행 사이에 남는다
+      - name: termux-packages 를 고정 판으로
+        run: |
+          set -euo pipefail
+          if [ ! -d "$TP/.git" ]; then git init -q "$TP"; git -C "$TP" remote add origin "${{ steps.cfg.outputs.repo }}"; fi
+          git -C "$TP" fetch -q --depth 1 origin "${{ steps.cfg.outputs.ref }}"
+          git -C "$TP" checkout -q -f FETCH_HEAD
+          git -C "$TP" clean -q -fdx -e output/
+          echo "termux-packages $(git -C "$TP" rev-parse HEAD)"
+
+      - name: 우리 경로로 패치
+        run: packaging/patch-termux-packages.sh "$TP"
+
+      # termux-am 은 안드로이드 앱이라 platform-33·build-tools 30.0.3 이 필요하다 (1판 2026-09-20)
+      - name: 안드로이드 SDK 채우기
+        run: |
+          set -euo pipefail
+          SRC=$(ls -d "$HOME"/lib/android-sdk-* | head -1)
+          DST="$HOME/.termux-build/jc-android-sdk"
+          mkdir -p "$DST/platforms" "$DST/build-tools"
+          for d in "$SRC"/*; do b=$(basename "$d"); case "$b" in platforms|build-tools) ;; *) ln -sfn "$d" "$DST/$b" ;; esac; done
+          for d in "$SRC"/platforms/*; do ln -sfn "$d" "$DST/platforms/$(basename "$d")"; done
+          for d in "$SRC"/build-tools/*; do ln -sfn "$d" "$DST/build-tools/$(basename "$d")"; done
+          cd "$DST"
+          if [ ! -d platforms/android-33 ]; then
+            curl -fsSL -o /tmp/p33.zip https://dl.google.com/android/repository/platform-33_r02.zip
+            rm -rf /tmp/p33 && mkdir -p /tmp/p33 && unzip -q /tmp/p33.zip -d /tmp/p33
+            mv "$(ls -d /tmp/p33/*/ | head -1)" platforms/android-33
+          fi
+          if [ ! -d build-tools/30.0.3 ]; then
+            curl -fsSL -o /tmp/bt.zip https://dl.google.com/android/repository/build-tools_r30.0.3-linux.zip
+            rm -rf /tmp/bt && mkdir -p /tmp/bt && unzip -q /tmp/bt.zip -d /tmp/bt
+            mv "$(ls -d /tmp/bt/*/ | head -1)" build-tools/30.0.3
+          fi
+
+      # 의존성도 모두 직접 굽는다 — 공식 deb 는 com.termux 경로라 섞으면 안 된다
+      - name: 패키지 굽기
+        if: steps.cfg.outputs.packages != ''
+        working-directory: ${{ env.TP }}
+        env:
+          PKGS: ${{ steps.cfg.outputs.packages }}
+        run: |
+          set -o pipefail
+          FORCE=""
+          case "${{ inputs.force_rebuild }}" in listed) FORCE="-f" ;; all) FORCE="-F" ;; esac
+          export ANDROID_HOME="$HOME/.termux-build/jc-android-sdk"
+          sudo mkdir -p /data && sudo chown builder:builder /data
+          ./build-package.sh -a "$ARCH" $FORCE $PKGS 2>&1 | tail -n 3000
+          echo "deb $(find output -name '*.deb' | wc -l)개"
+
+      - name: 서명 키 가져오기
+        if: inputs.publish_repo || inputs.make_bootstrap
+        env:
+          KEY: ${{ secrets.JC_PACKAGES_GPG_KEY }}
+          PASS: ${{ secrets.JC_PACKAGES_GPG_PASSPHRASE }}
+        run: |
+          set -euo pipefail
+          export GNUPGHOME="$RUNNER_TEMP/gnupg"; mkdir -m 700 -p "$GNUPGHOME"
+          echo "GNUPGHOME=$GNUPGHOME" >> "$GITHUB_ENV"
+          printf '%s\n' "$KEY" | gpg --batch --quiet --import
+          printf '%s' "$PASS" > "$GNUPGHOME/pass"; chmod 600 "$GNUPGHOME/pass"
+          gpg --batch --list-secret-keys --keyid-format long | grep -m1 sec
+
+      # apt 저장소 = gh-pages 브랜치의 뿌리. 이미 올린 deb 와 새 deb 를 합쳐 다시 만들고 서명한다
+      - name: apt 저장소 만들기·서명·푸시
+        if: inputs.publish_repo
+        run: |
+          set -euo pipefail
+          BR="${{ steps.cfg.outputs.pages }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          rm -rf /tmp/tar && git clone -q --depth 1 https://github.com/termux/termux-apt-repo.git /tmp/tar
+          for attempt in 1 2 3; do
+            rm -rf pages all-debs && mkdir -p all-debs
+            git worktree prune
+            if git ls-remote --exit-code --heads origin "$BR" >/dev/null 2>&1; then
+              git fetch -q origin "$BR"; git worktree add -q pages "origin/$BR"
+            else
+              git worktree add -q --detach pages HEAD
+              (cd pages && git checkout -q --orphan "$BR" && git rm -rfq --cached . && find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +)
+            fi
+            find pages -name '*.deb' -exec cp -n {} all-debs/ \; 2>/dev/null || true
+            find "$TP/output" -name '*.deb' -exec cp -f {} all-debs/ \;
+            echo "deb 합계: $(ls all-debs | wc -l)"
+            find pages -mindepth 1 -maxdepth 1 ! -name .git ! -name README.md -exec rm -rf {} +
+            python3 /tmp/tar/termux-apt-repo all-debs pages stable main
+            R=pages/dists/stable/Release
+            gpg --batch --yes --pinentry-mode loopback --passphrase-file "$GNUPGHOME/pass" --digest-algo SHA256 --clearsign -o pages/dists/stable/InRelease "$R"
+            gpg --batch --yes --pinentry-mode loopback --passphrase-file "$GNUPGHOME/pass" --digest-algo SHA256 --armor --detach-sign -o "$R.gpg" "$R"
+            cp packaging/../keys/jc-terminal-packages.asc pages/jc-terminal-packages.asc
+            touch pages/.nojekyll
+            cd pages
+            git add -A
+            if git diff --cached --quiet; then echo "바뀐 것이 없습니다"; cd ..; break; fi
+            git commit -q -m "apt: 패키지 갱신 (run ${{ github.run_number }})"
+            if git push -q origin "HEAD:$BR"; then echo "푸시 완료"; cd ..; break; fi
+            cd ..; sleep $((attempt * 10))
+          done
+          ls pages/dists/stable/main
+
+      - name: 부트스트랩 만들기
+        if: inputs.make_bootstrap
+        id: boot
+        run: |
+          set -euo pipefail
+          [ -d pages ] || { git fetch -q origin "${{ steps.cfg.outputs.pages }}"; git worktree add -q pages "origin/${{ steps.cfg.outputs.pages }}"; }
+          nohup python3 -m http.server 8088 --bind 127.0.0.1 --directory pages > /tmp/httpd.log 2>&1 &
+          for i in $(seq 1 20); do curl -fsS "http://127.0.0.1:8088/dists/stable/Release" -o /dev/null && break; sleep 1; done
+          cd "$TP"
+          rm -f bootstrap-*.zip
+          ./scripts/generate-bootstraps.sh --architectures "$ARCH" --repository "http://127.0.0.1:8088" --add "${{ steps.cfg.outputs.extra }}"
+          cd "$GITHUB_WORKSPACE"
+          packaging/retarget-bootstrap.sh "$TP/bootstrap-$ARCH.zip"
+          echo "zip=$TP/bootstrap-$ARCH.zip" >> "$GITHUB_OUTPUT"
+
+      # 부트스트랩 안의 경로가 정말 우리 것인지 — 여기서 걸러야 앱이 헛돈다 (1판 교훈)
+      - name: 부트스트랩 경로 확인
+        if: inputs.make_bootstrap
+        run: |
+          set -euo pipefail
+          Z="${{ steps.boot.outputs.zip }}"
+          rm -rf /tmp/bsx && mkdir /tmp/bsx && unzip -q "$Z" -d /tmp/bsx
+          strings /tmp/bsx/bin/bash | grep -q '/data/data/com.termux/' && { echo "::error::bash 에 com.termux 경로가 남았습니다"; exit 1; }
+          strings /tmp/bsx/bin/bash | grep -m1 '${{ steps.cfg.outputs.prefix }}' >/dev/null || { echo "::error::bash 에 우리 경로가 없습니다"; exit 1; }
+          LEFT=$(grep -rIl '/data/data/com\.termux/' /tmp/bsx | while read -r f; do
+                   grep -vE '^[[:space:]]*(#|//|\*|/\*)' "$f" | grep -q '/data/data/com\.termux/' && echo "${f#/tmp/bsx/}"; done || true)
+          [ -z "$LEFT" ] || { echo "::error::com.termux 경로가 남은 파일:"; echo "$LEFT"; exit 1; }
+          echo "부트스트랩 경로 확인 완료"
+
+      - name: 부트스트랩 서명·릴리스 (소스 묶음 포함)
+        if: inputs.make_bootstrap
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          Z="${{ steps.boot.outputs.zip }}"
+          TAG="bootstrap-$(date -u +%Y%m%d)-${{ github.run_number }}"
+          mkdir -p rel && cp "$Z" "rel/bootstrap-$ARCH.zip"
+          gpg --batch --yes --pinentry-mode loopback --passphrase-file "$GNUPGHOME/pass" --digest-algo SHA256 --detach-sign -o "rel/bootstrap-$ARCH.zip.sig" "rel/bootstrap-$ARCH.zip"
+          (cd rel && sha256sum "bootstrap-$ARCH.zip" > "bootstrap-$ARCH.zip.sha256")
+          # GPL 등 소스 제공 (DEC-002): 구운 패키지의 원본 소스와 레시피·패치를 판별로 묶어 같은 릴리스에
+          tar -C "$HOME/.termux-build" -cf "rel/sources-$TAG.tar" --wildcards '*/cache/*' 2>/dev/null || true
+          tar -C "$TP" -rf "rel/sources-$TAG.tar" packages scripts LICENSE.md
+          cp packaging/jc-packages.conf rel/
+          SHA=$(cut -d' ' -f1 "rel/bootstrap-$ARCH.zip.sha256")
+          gh release create "$TAG" rel/* --title "Bootstrap $TAG ($ARCH)" --notes "JC Terminal V2 부트스트랩 — prefix \`${{ steps.cfg.outputs.prefix }}\`, 저장소 ${{ steps.cfg.outputs.repo_url }}
+
+          \`\`\`
+          jcBootstrapUrl=https://github.com/${{ github.repository }}/releases/download/$TAG/bootstrap-$ARCH.zip
+          jcBootstrapSha256=$SHA
+          \`\`\`
+
+          termux-packages ${{ steps.cfg.outputs.ref }} — 소스·레시피·패치는 sources-$TAG.tar"
+          echo "### 부트스트랩 $TAG" >> "$GITHUB_STEP_SUMMARY"
+          echo "jcBootstrapSha256=$SHA" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: 서명 키 지우기
+        if: always()
+        run: rm -rf "$RUNNER_TEMP/gnupg"
