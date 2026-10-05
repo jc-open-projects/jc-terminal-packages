@@ -84,6 +84,12 @@ if [ -f "$rj" ] && ! grep -qF "$JC_REPO_URL" "$rj"; then
 	mv "$rj.new" "$rj"
 	echo "[*] repo.json 을 우리 저장소로 바꿨습니다"
 fi
+# 저장소가 어느 앱 경로로 구운 것인지 (TERMUX_REPO_*) — 우리 앱과 같아야 -i 가 받는다. 다르면 -i 를 무시하고 다 굽는다
+if grep -q '^TERMUX_REPO_APP__PACKAGE_NAME="com.termux"' "$props"; then
+	perl -pi -e 's|^(TERMUX_REPO_\w+=")(/data/data/)?com\.termux|$1$2'"$JC_APP_PACKAGE_NAME"'|' "$props"
+	grep -q "^TERMUX_REPO_APP__PACKAGE_NAME=\"$JC_APP_PACKAGE_NAME\"" "$props" || { echo "[!] TERMUX_REPO_* 를 바꾸지 못했습니다" >&2; exit 1; }
+	echo "[*] TERMUX_REPO_* 를 $JC_APP_PACKAGE_NAME 로 바꿨습니다"
+fi
 
 # 6. 의존성 저장소의 서명을 우리 키로 확인한다 — build-package.sh 는 Termux 키만 가져온다
 bp="$tp/build-package.sh"

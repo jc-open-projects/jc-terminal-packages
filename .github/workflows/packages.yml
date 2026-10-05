@@ -94,8 +94,8 @@ jobs:
           ./scripts/run-docker.sh true
           ./scripts/free-space.sh
           df -h /
+      # termux-am(안드로이드 앱)은 의존성으로 굽힐 수도 있어 늘 준비한다
       - name: 안드로이드 SDK (termux-am 용)
-        if: matrix.recipe == 'termux-am'
         working-directory: ${{ env.TP }}
         run: |
           mkdir -p jc && cp "$GITHUB_WORKSPACE/packaging/prep-android-sdk.sh" jc/
