@@ -109,12 +109,22 @@ jobs:
           FORCE=""
           case "${{ inputs.force_rebuild }}" in listed) FORCE="-f" ;; all) FORCE="-F" ;; esac
           # -i: 의존성은 우리 저장소에서 받고(서명 확인), 없거나 판이 다르면 그 자리에서 굽는다
-          ./scripts/run-docker.sh ./build-package.sh -i -C -a "$ARCH" $FORCE "${{ matrix.recipe }}" 2>&1 | tail -n 3000
+          ./scripts/run-docker.sh ./build-package.sh -i -C -a "$ARCH" $FORCE "${{ matrix.recipe }}" > "$RUNNER_TEMP/build.log" 2>&1 || { tail -n 4000 "$RUNNER_TEMP/build.log"; exit 1; }
+          # 의존성을 받았는지·구웠는지 한눈에
+          grep -E 'Download of .* failed|termux - build of|Ignoring' "$RUNNER_TEMP/build.log" || true
           ls output
+          # deb 이름에 판의 epoch(1:…)가 있으면 ':' 때문에 artifact 로 올리지 못한다 — 묶어서 올린다
+          tar -C output -cf "$RUNNER_TEMP/debs-${{ matrix.recipe }}.tar" .
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: log-${{ matrix.recipe }}
+          path: ${{ runner.temp }}/build.log
+          retention-days: 7
       - uses: actions/upload-artifact@v4
         with:
           name: debs-${{ matrix.recipe }}
-          path: ${{ env.TP }}/output/*.deb
+          path: ${{ runner.temp }}/debs-${{ matrix.recipe }}.tar
           if-no-files-found: error
           retention-days: 7
 
@@ -136,6 +146,7 @@ jobs:
         id: new
         run: |
           mkdir -p new-debs
+          for t in new-debs/*.tar; do [ -f "$t" ] && tar -C new-debs -xf "$t" && rm "$t"; done
           n=$(find new-debs -name '*.deb' | wc -l)
           echo "count=$n" >> "$GITHUB_OUTPUT"
           echo "새 deb $n개"; ls new-debs || true
