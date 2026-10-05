@@ -87,17 +87,21 @@ jobs:
       - uses: actions/checkout@v4
       - name: termux-packages 고정 판 + 우리 패치
         run: packaging/checkout-termux-packages.sh "$TP"
+      # run-docker.sh 는 termux-packages 폴더 안에서 돌아야 한다 (./scripts/… 를 상대 경로로 읽음)
       - name: 빌드 컨테이너·디스크
+        working-directory: ${{ env.TP }}
         run: |
-          "$TP/scripts/run-docker.sh" true
-          "$TP/scripts/free-space.sh"
+          ./scripts/run-docker.sh true
+          ./scripts/free-space.sh
           df -h /
       - name: 안드로이드 SDK (termux-am 용)
         if: matrix.recipe == 'termux-am'
+        working-directory: ${{ env.TP }}
         run: |
-          mkdir -p "$TP/jc" && cp packaging/prep-android-sdk.sh "$TP/jc/"
-          "$TP/scripts/run-docker.sh" bash jc/prep-android-sdk.sh /home/builder/.termux-build/jc-android-sdk
+          mkdir -p jc && cp "$GITHUB_WORKSPACE/packaging/prep-android-sdk.sh" jc/
+          ./scripts/run-docker.sh bash jc/prep-android-sdk.sh /home/builder/.termux-build/jc-android-sdk
       - name: 굽기 — ${{ matrix.recipe }}
+        working-directory: ${{ env.TP }}
         env:
           TERMUX_DOCKER_EXEC_EXTRA_ARGS: --env ANDROID_HOME=/home/builder/.termux-build/jc-android-sdk
         run: |
@@ -105,8 +109,8 @@ jobs:
           FORCE=""
           case "${{ inputs.force_rebuild }}" in listed) FORCE="-f" ;; all) FORCE="-F" ;; esac
           # -i: 의존성은 우리 저장소에서 받고(서명 확인), 없거나 판이 다르면 그 자리에서 굽는다
-          "$TP/scripts/run-docker.sh" ./build-package.sh -i -C -a "$ARCH" $FORCE "${{ matrix.recipe }}" 2>&1 | tail -n 3000
-          ls "$TP/output"
+          ./scripts/run-docker.sh ./build-package.sh -i -C -a "$ARCH" $FORCE "${{ matrix.recipe }}" 2>&1 | tail -n 3000
+          ls output
       - uses: actions/upload-artifact@v4
         with:
           name: debs-${{ matrix.recipe }}
