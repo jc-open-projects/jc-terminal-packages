@@ -3759,9 +3759,9 @@ SHA512: d85c986574f730960759225eb0467ea13e09c76a05c73a107457157518d63706463dc9c4
 
 Package: termux-tools
 Architecture: aarch64
-Installed-Size: 552
+Installed-Size: 248
 Maintainer: @termux
-Version: 1.46.0+really1.45.0-2
+Version: 1.46.0+really1.45.0-3
 Homepage: https://termux.dev/
 Breaks: termux-keyring (<< 1.9)
 Depends: bzip2, coreutils, curl, dash, diffutils, findutils, gawk, grep, gzip, less, procps, psmisc, sed, tar, termux-am (>= 0.8.0), termux-core, termux-exec, util-linux, xz-utils, dialog
@@ -3770,12 +3770,12 @@ Conflicts: procps (<< 3.3.15-2)
 Recommends: ed, dos2unix, inetutils, net-tools, patch, unzip
 Suggests: termux-api
 Description: Basic system tools for Termux
-Filename: dists/stable/main/binary-aarch64/termux-tools_1.46.0+really1.45.0-2_aarch64.deb
-Size: 33632
-MD5Sum: 583b7168305153f57672c71235d48b5e
-SHA1: 199bf1eb71489a3cc816d7315664f584c8eb8794
-SHA256: 1b934ec8ccc0c096e17d84edc4b94849a66dde0631e1fa19f5e5c1a2b0183f84
-SHA512: e2ebf8da394622e10992bed861952465781761afcc3e1a828c828e946e7bd8bf5ebf5e3019175c98eb6cb58de46a2145b7ca70c183256164152f0a310f38a350
+Filename: dists/stable/main/binary-aarch64/termux-tools_1.46.0+really1.45.0-3_aarch64.deb
+Size: 29524
+MD5Sum: 1ccf8242bfad4a0af1311f3676235fa1
+SHA1: 5fe58df336b2d5afd877d112785d7fd13036eae2
+SHA256: b6ec9475847846a7cf3f38d8b7b73db89a0a0a3f224d5cd73f9ab6852f85a8cc
+SHA512: cd1e1cbe57e7697a5895faccb3e800f9532c51b1cca94b2ee46e1b040768dbf5105171eca9f6e5bab1da77ae887836afc4a5e7b5edf5d8cbb875728b533fa3aa
 
 Package: tk
 Architecture: aarch64
