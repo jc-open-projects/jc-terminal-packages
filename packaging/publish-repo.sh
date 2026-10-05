@@ -37,6 +37,8 @@ for attempt in 1 2 3; do
 	echo "[*] deb 합계: $(ls all-debs | wc -l)"
 	find pages -mindepth 1 -maxdepth 1 ! -name .git ! -name README.md -exec rm -rf {} +
 	python3 /tmp/tar/termux-apt-repo all-debs pages stable main
+	# arch=all 을 binary-aarch64 에 합친다 — build-package.sh -i 가 의존성을 받으려면 (merge-arch-all.py)
+	python3 "$here/merge-arch-all.py" pages/dists/stable
 	r=pages/dists/stable/Release
 	sign --clearsign -o pages/dists/stable/InRelease "$r"
 	sign --armor --detach-sign -o "$r.gpg" "$r"
