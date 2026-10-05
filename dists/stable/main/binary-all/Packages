@@ -37,11 +37,11 @@ Homepage: https://curl.se/docs/caextract.html
 Depends: ca-certificates (= 1:2026.09.25)
 Description: Common CA certificates (java keystore format)
 Filename: dists/stable/main/binary-all/ca-certificates-java_1:2026.09.25_all.deb
-Size: 96196
-MD5Sum: fb6bee6ff982ec37ae7f2849b9949a10
-SHA1: 39915885d7460668aed8e8cb25c5f95ab7045127
-SHA256: be0e2c1ad68e71acac231d90a9da926e61cd31789bac0d79d7bee31d6288d5d7
-SHA512: 61c4eeb33248825b44798b62ab198290f334d43cc2b58aedeca52d9c3e55230112084bc14efc8e7ca72d6d62e2698e7e09bd3233622cb0def487781f1bef4b4c
+Size: 96188
+MD5Sum: 4714f31eca20a1db1dee81b83230b779
+SHA1: 4f416a0197ad5678487bfa983febb040116083ec
+SHA256: f54a30a8ca54b0cfc5b59043469312d952a88d59a5678f0b5993cfbb578d8ff6
+SHA512: b8c7e13bff2db59bb698f623816d60459883fbf3445b3c1a5a1f8e2b3bc4e672b6c504103b0506d969241ed6bce7105136d69255425b543bfd3799ba31bb88d8
 
 Package: ca-certificates
 Architecture: all

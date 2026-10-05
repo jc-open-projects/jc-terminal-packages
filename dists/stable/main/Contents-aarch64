@@ -28732,7 +28732,6 @@ data/data/com.jc.terminal2/files/usr/share/swig/4.5.1/wchar.i                   
 data/data/com.jc.terminal2/files/usr/share/swig/4.5.1/windows.i                  swig
 data/data/com.jc.terminal2/files/usr/share/swig/4.5.1/xml/typemaps.i             swig
 data/data/com.jc.terminal2/files/usr/share/swig/4.5.1/xml/xml.swg                swig
-data/data/com.jc.terminal2/files/usr/bin/sh                                      tar
 data/data/com.jc.terminal2/files/usr/bin/tar                                     tar
 data/data/com.jc.terminal2/files/usr/libexec/rmt                                 tar
 data/data/com.jc.terminal2/files/usr/share/doc/tar/copyright                     tar
@@ -30770,7 +30769,6 @@ data/data/com.jc.terminal2/files/usr/lib/libsmartcols.a                         
 data/data/com.jc.terminal2/files/usr/lib/libsmartcols.la                         util-linux-static
 data/data/com.jc.terminal2/files/usr/lib/libuuid.a                               util-linux-static
 data/data/com.jc.terminal2/files/usr/lib/libuuid.la                              util-linux-static
-data/data/com.jc.terminal2/files/usr/lib/python3.14/site-packages/libmount/pylibmount.la util-linux-static
 data/data/com.jc.terminal2/files/usr/bin/addpart                                 util-linux
 data/data/com.jc.terminal2/files/usr/bin/bits                                    util-linux
 data/data/com.jc.terminal2/files/usr/bin/blkpr                                   util-linux
@@ -30847,8 +30845,6 @@ data/data/com.jc.terminal2/files/usr/bin/waitpid                                
 data/data/com.jc.terminal2/files/usr/bin/wdctl                                   util-linux
 data/data/com.jc.terminal2/files/usr/bin/whereis                                 util-linux
 data/data/com.jc.terminal2/files/usr/bin/zramctl                                 util-linux
-data/data/com.jc.terminal2/files/usr/lib/python3.14/site-packages/libmount/__init__.py util-linux
-data/data/com.jc.terminal2/files/usr/lib/python3.14/site-packages/libmount/pylibmount.so util-linux
 data/data/com.jc.terminal2/files/usr/share/bash-completion/completions/addpart   util-linux
 data/data/com.jc.terminal2/files/usr/share/bash-completion/completions/bits      util-linux
 data/data/com.jc.terminal2/files/usr/share/bash-completion/completions/blkpr     util-linux

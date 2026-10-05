@@ -864,7 +864,7 @@ SHA512: e5f364e15e9cbb0086d84628272acc3a7799a509cb376f6320ad47ae183601b5845108c5
 
 Package: less
 Architecture: aarch64
-Installed-Size: 420
+Installed-Size: 572
 Maintainer: Joshua Kahn <tom@termux.dev>
 Version: 710
 Homepage: https://www.greenwoodsoftware.com/less/
@@ -873,11 +873,11 @@ Essential: yes
 Replaces: lazyread
 Description: Terminal pager program used to view the contents of a text file one screen at a time
 Filename: dists/stable/main/binary-aarch64/less_710_aarch64.deb
-Size: 143756
-MD5Sum: c9768a08649a11cef10bac6f32b6c63b
-SHA1: 13cc1bafe8c28672cb99955f1e756dfcdd648d76
-SHA256: 39324a7b58f5be7a29c734f21e4d32b06eb186ce2223b23c2989cab0954ee60a
-SHA512: d90eb74ede11106d4490a5b23c0fb8423cdb0ee9f19c4cea5a828dc1a7a8b189f5eb49b00260d39801f8bd0c63be5e6afa851b9352b747d81cc1781174dd7eb8
+Size: 192072
+MD5Sum: 18918cb6360af6d4f31dea3ed7b29cc1
+SHA1: 7ee1808af14e08b0b49c08eff2c6df7c002d2cea
+SHA256: 19eab77758d3280238edc29a1d333938d4c02fb5c3789f6860ec9fa3c852cf53
+SHA512: d781d0f1e30d4b8602c4b47071a0af320b66ec5e66461d3c925847f87cb1ef89fab047356beec353a35e38a060ff7bc3b5d5b9b3e653d29625f621f5a3944a88
 
 Package: libacl-static
 Architecture: aarch64
@@ -1249,18 +1249,18 @@ SHA512: a383142ed4e8247a0322c29f2639906e1baf8401b5053e826cc740bf19675fe3134e5a84
 
 Package: libcurl-static
 Architecture: aarch64
-Installed-Size: 2072
+Installed-Size: 2068
 Maintainer: @termux
 Version: 8.22.0
 Homepage: https://curl.se/
 Depends: libcurl (= 8.22.0)
 Description: Static libraries for libcurl
 Filename: dists/stable/main/binary-aarch64/libcurl-static_8.22.0_aarch64.deb
-Size: 427404
-MD5Sum: 7bd30b56dec099ef18c21a794bad2227
-SHA1: c6c616bfbbfd1755dd8ee0a618132572ad423153
-SHA256: 138a3217f34ad5eb987d9149def059edfcac05003c0fd6d080b1a414d5ba7f07
-SHA512: 57a0a74ffef642c71e1adf906f926eee41f4a627c88b285f1ae151f876170e7a78c4c085a2548ba5a389ff438a81a92aee2d7e0a2df9567babc3b398570d464d
+Size: 426736
+MD5Sum: 827b3ac5e52c71c8b8ac68ce42399774
+SHA1: 5fbe51b53c81a21684c52ec66f388455c037a281
+SHA256: 65094d999dd9518d2be1d1472d01306c8d238fe32c417b71b7bc71005918b5cd
+SHA512: 13252bfe4974a94ebc085824beb2125e85e0cf7eacfe8fade89259ce98cbef7e00669dcad7d9c7e1ab5045855e939105963baed9b82c97848fea70b20ab71628
 
 Package: libcurl
 Architecture: aarch64
@@ -1275,11 +1275,11 @@ Conflicts: apt (<< 1.4.8-8)
 Replaces: libcurl-dev
 Description: Easy-to-use client-side URL transfer library
 Filename: dists/stable/main/binary-aarch64/libcurl_8.22.0_aarch64.deb
-Size: 1033580
-MD5Sum: ee8f5edc5aee81d5acbf6d525e88d2e8
-SHA1: 9cdef47e385c808c0b76f79e60726f3379119689
-SHA256: 2ea3b3cc27c7d7c2f155480004a974f61b9e83350e6ef39c6bb8161b375d83bb
-SHA512: 8d2d5f7872a610d23fa6f3c6a362cd77139ccca956147e8971961332d3f15a157ec2c8ff82e850a5dc27f4c86fd0de22abdb00e7a02d403781264c27cd7ce58e
+Size: 1032968
+MD5Sum: 661edd4677f372e291aea0a0ea116d58
+SHA1: b4514d6465e4900e20679e9fce1e17237d7f4739
+SHA256: fc62bf855e3b03ebb23d27417626269ab856df034f3850eb4d6987f8309aedb0
+SHA512: def9390393e293af2cfda86cebdd5359887cd7e9061c45af53938303a6333ee1afc3fa6c9334c3f67915a8f75d30afcb77c8d4e51bbaaf1c8e06341e912e57c7
 
 Package: libdb-static
 Architecture: aarch64
@@ -2210,7 +2210,7 @@ SHA512: 86c71849e773e34153a48b1fd50721f881d094dc837b74f2743bfd6adc2a94137635424c
 
 Package: libssh2
 Architecture: aarch64
-Installed-Size: 1152
+Installed-Size: 1160
 Maintainer: @termux
 Version: 1.11.1-2
 Homepage: https://www.libssh2.org
@@ -2220,10 +2220,10 @@ Replaces: libssh2-dev
 Description: Client-side library implementing the SSH2 protocol
 Filename: dists/stable/main/binary-aarch64/libssh2_1.11.1-2_aarch64.deb
 Size: 219332
-MD5Sum: d268f193113c983a22d39c8a9048620f
-SHA1: dbe33e53a5fdcc1753afe19c3d0bfb8bc49cb78e
-SHA256: 0f655eca8577729e1cd3b16f3fe716b1a48a90e49cc7db2fe8a3da918240528f
-SHA512: ee2c681bd463665e200e189d2a9ae4787ac64d5e3bc0efd4401277c2409e5e584ed5b937c96912dbb0cd2e4332a2a02dde3f4d2c5c505672c5423cfd471c4d71
+MD5Sum: e532973a4ced7fceb4899dfa375ddc28
+SHA1: ce9e88971ffd9151e40a9a8f30c9b19eb5886289
+SHA256: 8b73b45064e5ef94f93ef6ce0274ed2633ff0d9e26a6b0c7886d77ca2a2be7cb
+SHA512: ba72dc11398ed31bc2947dda51d34c5ef83276f077b83340b22e68ddf286bb99f7cbc5ee73a3d965f5cb3194aa58e1668f3fadbcd25ad4ca65cde4b0b53bfad4
 
 Package: libtasn1-static
 Architecture: aarch64
@@ -2919,11 +2919,11 @@ Homepage: https://invisible-island.net/ncurses/
 Depends: ncurses (= 6.6.20260307+really6.5.20250830)
 Description: Static libraries for ncurses
 Filename: dists/stable/main/binary-aarch64/ncurses-static_6.6.20260307+really6.5.20250830_aarch64.deb
-Size: 154128
-MD5Sum: 67e34a28506fffd40710601fe17615fb
-SHA1: 4a2be71ccb1c04dff24707140eda45b0fcadf5bf
-SHA256: 5a5bd25b8689ea2f3935d87e6c98dcc78b835e7495ba8d8ce7cc0dbeaf1b1ed4
-SHA512: fa4dd009c728060e08a6ee119a3a145eb8c8c979fc6828dfd6ae5f5f9b0d787dd8fe3ab5e0ed3b0a3373278ab7b27802490217d3cb6ade0127501fdd994f37c3
+Size: 154132
+MD5Sum: 19551056eeecf7a7245699cf91bd2f5e
+SHA1: f2dd98b3fe9e4cce4626d7a9565ec7d5cb1ef03d
+SHA256: 131de4b77f09437592df1cbfd07840382a080d1b5b09bf3f48d7d48ee4ae01c6
+SHA512: 68b829a34e00d773a2a4ebbe1219424d37ba9562795b8929d743421f13c19289d65ae18fb096db755130c7715bf9cc3e0b9823531d256033e8a6e4a05fe808d0
 
 Package: ncurses-ui-libs-static
 Architecture: aarch64
@@ -2934,11 +2934,11 @@ Homepage: https://invisible-island.net/ncurses/
 Depends: ncurses-ui-libs, ncurses (= 6.6.20260307+really6.5.20250830)
 Description: Static libraries for terminal user interfaces based on ncurses
 Filename: dists/stable/main/binary-aarch64/ncurses-ui-libs-static_6.6.20260307+really6.5.20250830_aarch64.deb
-Size: 39544
-MD5Sum: 13e4aa3fe222cf8b3e6991a09d1c4404
-SHA1: edec540d54ccd3cb4b06ef0eadc8d66a37808aa2
-SHA256: c4ca19ad043855617e441d1503093c121bc9ab3afea6e3047df4612684e8a837
-SHA512: b89e8572046d5c73f19c67c2ca5c370dafc4d743d8084f1f20c133f5bde289ce8ff06206062865b83a99b230c34042f71df7da33be3d4255a6cb1a292abebe47
+Size: 39548
+MD5Sum: f65715ee1c7a5e130adddbd5ea4bc578
+SHA1: 1f216ca94d2aa33e32b32bddf9f6c7974d663c30
+SHA256: 3bdeca5591ee776bae0fea4daf76036c5682b6fd75f90b80969943b3ba7a08eb
+SHA512: 057c5011caa212de1a071dd7dfdaf68edecafb31492a3b911efc2e22b3f826b3035a6be048cd518f67f43c53074caaf851504c6f7e417f6347ebb1df39ab38a1
 
 Package: ncurses-ui-libs
 Architecture: aarch64
@@ -2974,7 +2974,7 @@ SHA512: 62d9295ddbf130f5826df77524928573a35f6c5a4bcef691f10114090d29f444b1c285c8
 
 Package: ncurses
 Architecture: aarch64
-Installed-Size: 1604
+Installed-Size: 1600
 Maintainer: @termux
 Version: 6.6.20260307+really6.5.20250830
 Homepage: https://invisible-island.net/ncurses/
@@ -2983,10 +2983,10 @@ Replaces: ncurses-dev, ncurses-utils (<< 6.1.20190511-4)
 Description: Library for text-based user interfaces in a terminal-independent manner
 Filename: dists/stable/main/binary-aarch64/ncurses_6.6.20260307+really6.5.20250830_aarch64.deb
 Size: 557940
-MD5Sum: 7ea904b2c940205837d24339ae1b488d
-SHA1: bd714451a0a138007fefc39aabce9d38caed2e7e
-SHA256: a5c4d1e053b8362c8fc892bb0983ec5f7264843a3cb5e4b26ce4d33770c5c4bf
-SHA512: cb8328ee5eccbd685e26f36cfa2344c103800f8e22c15faf7b2b9ccff635ba807761815d985fb999f0204857105fb6370709dbbd4d5baa5ed2cc1aab7d5eac4e
+MD5Sum: 4908e799e2ff5b00552a92ba31768465
+SHA1: d58b5e8a5bfe4dd8ebc3bacd4660517e1581cfb5
+SHA256: fa2d696310d95afeda7f13fafb85e36a99c70f7a386d494e6586d0e1722179eb
+SHA512: a829b54b05aa47b06032263a526b86c4cc5412600b436b5bb399160ea744f3c1b7423b3e9f4e37fe1503c8a29575d1ca304685501ea4f4da23758334b38b74a9
 
 Package: ndk-sysroot
 Architecture: aarch64
@@ -3495,18 +3495,18 @@ SHA512: 0716fa9169388d53005fe908454c18a616cb2edb232d4a48213893db5b5c41c5d387eb9d
 
 Package: sed
 Architecture: aarch64
-Installed-Size: 484
+Installed-Size: 476
 Maintainer: @termux
 Version: 4.10
 Homepage: https://www.gnu.org/software/sed/
 Essential: yes
 Description: GNU stream editor for filtering/transforming text
 Filename: dists/stable/main/binary-aarch64/sed_4.10_aarch64.deb
-Size: 125660
-MD5Sum: 8397b1687c06b1b32fefd519081e43b8
-SHA1: fdb857d1ea245a18e4ccd2040cf5eae5d53e325e
-SHA256: 13b294a8303beea6e0390e9807f4ba59c9275e9a8143ec3a4baad04cc0458af1
-SHA512: f9336749f907d838def977984cf1224f83cfe3caf14be4b9f105ed959423a2df6c053c5b6dbf7c93dcb6c5261d64af8f490eccd164c8b76f201050ab3901379e
+Size: 123808
+MD5Sum: 301847445c57bd8d1b16b6d18b23bb05
+SHA1: 58ed26a93309234e5ac1601ce99bf43ef190ddcd
+SHA256: aed604907fa0e94502317a0e14bc1437f00c967ed71dd2b66ab9f79fa6cf1458
+SHA512: 6e8ea9db530f0d3e61b215394347f6a5e19b3ee2015607f029b407adbe092d48272871b708e6c8e95bd14df7dc97b5a0419151f74523bc5ecfda6511c087bf2c
 
 Package: serf-static
 Architecture: aarch64
@@ -3642,11 +3642,11 @@ Depends: libacl, libandroid-glob, libandroid-selinux, libiconv
 Essential: yes
 Description: GNU tar for manipulating tar archives
 Filename: dists/stable/main/binary-aarch64/tar_1.35-3_aarch64.deb
-Size: 345628
-MD5Sum: ee66a0e51fe8f1e228ef6498958e6d40
-SHA1: 4d8264acdb0dd3c4228cd9da6f865732fd0a5e9f
-SHA256: ccf507a25a604b8b25779c6821073af7d6777651f49141c9bfb3fee7048ccfcc
-SHA512: 1c410bf58b3e65635f65e787d08e2f89e318500f06231bcc010fd14b1682b1bcaf710b8e4ed44c12e66423712240f0c49b445772597e726bdc3f59d07245fca4
+Size: 345644
+MD5Sum: bdc686f23fe20c4261a61862b25ba829
+SHA1: fdf4827ce20750d1002b9fbed92bae5d8c6a14f8
+SHA256: 66ae7bd0cc2454b20d31d8130b4b11b2212c8a9b9c0ec8fabdac7f294f2c542a
+SHA512: 6e658904486fa5c7f761c5fff271f7f1cb83c871784228cc26f7422b3ab96c658049288434e71962659fabb4e0f6cc8bbf95dd75c213fc98d8bb136dbcc6a6f0
 
 Package: tcl
 Architecture: aarch64
@@ -3761,21 +3761,21 @@ Package: termux-tools
 Architecture: aarch64
 Installed-Size: 552
 Maintainer: @termux
-Version: 1.46.0+really1.45.0-1
+Version: 1.46.0+really1.45.0-2
 Homepage: https://termux.dev/
 Breaks: termux-keyring (<< 1.9)
-Depends: bzip2, coreutils, curl, dash, diffutils, findutils, gawk, grep, gzip, less, procps, psmisc, sed, tar, termux-am (>= 0.8.0), termux-am-socket (>= 1.5.0), termux-core, termux-exec, util-linux, xz-utils, dialog
+Depends: bzip2, coreutils, curl, dash, diffutils, findutils, gawk, grep, gzip, less, procps, psmisc, sed, tar, termux-am (>= 0.8.0), termux-core, termux-exec, util-linux, xz-utils, dialog
 Essential: yes
 Conflicts: procps (<< 3.3.15-2)
 Recommends: ed, dos2unix, inetutils, net-tools, patch, unzip
 Suggests: termux-api
 Description: Basic system tools for Termux
-Filename: dists/stable/main/binary-aarch64/termux-tools_1.46.0+really1.45.0-1_aarch64.deb
-Size: 33636
-MD5Sum: 19cef000e6193f2e806ade9a0ae4ea23
-SHA1: c85080a95ef9cca1d9692b29d991693e494e0f60
-SHA256: aae13738ad959bbdb6393589b3030df4cc680b68e212aad115756177099db074
-SHA512: caa4382cc740f50b7b01d71d4acd1c6e071f4fe18499a904b2f84a340f3f73ebcdd2e1152af9ff48337fd179124ac9879f740a5071dd4856559fbe4db703d980
+Filename: dists/stable/main/binary-aarch64/termux-tools_1.46.0+really1.45.0-2_aarch64.deb
+Size: 33632
+MD5Sum: 583b7168305153f57672c71235d48b5e
+SHA1: 199bf1eb71489a3cc816d7315664f584c8eb8794
+SHA256: 1b934ec8ccc0c096e17d84edc4b94849a66dde0631e1fa19f5e5c1a2b0183f84
+SHA512: e2ebf8da394622e10992bed861952465781761afcc3e1a828c828e946e7bd8bf5ebf5e3019175c98eb6cb58de46a2145b7ca70c183256164152f0a310f38a350
 
 Package: tk
 Architecture: aarch64
@@ -3885,22 +3885,22 @@ SHA512: 710798d535ef0f69860f0887dca0b7518b312ae5c6f46ca292dc7f84bc0ec4aba4a7009a
 
 Package: util-linux-static
 Architecture: aarch64
-Installed-Size: 3316
+Installed-Size: 3300
 Maintainer: @termux
 Version: 2.42.4
 Homepage: https://en.wikipedia.org/wiki/Util-linux
 Depends: util-linux (= 2.42.4)
 Description: Static libraries for util-linux
 Filename: dists/stable/main/binary-aarch64/util-linux-static_2.42.4_aarch64.deb
-Size: 439376
-MD5Sum: 3991f27fe589ea182dea4cb04212bb99
-SHA1: 042480ac260f91ae78f21e37ff974216698ef945
-SHA256: ebe900afae4845e5b77953c542ea43ff72a3c3a747d41e64a52106b011120469
-SHA512: cff3543814cda70394ca917879198620ecc9e0ae0ac273faeefe672c1fbf0af023f036a0c2dd4bde6cd889dbb5910371534824a227cc9ce57e0bc2b674672f12
+Size: 439232
+MD5Sum: 2eefffe224901111d1e1cef4ce40b95b
+SHA1: f8bf5d57d235d6b5f0e3619cf879237d460de7af
+SHA256: 395049eb2601cd790ba427065e631a434fa6a48939370772243d0db325fd9abb
+SHA512: 6ada7973964fbded2e4c7bcf722ef8c251be2cc2acca7d74ff88fdeaa7c70c678fcc8ba094fa5a0dbd3dd790114b062b2c7603779dcf7424f260d528f9cc3d8e
 
 Package: util-linux
 Architecture: aarch64
-Installed-Size: 4668
+Installed-Size: 4556
 Maintainer: @termux
 Version: 2.42.4
 Homepage: https://en.wikipedia.org/wiki/Util-linux
@@ -3910,11 +3910,11 @@ Essential: yes
 Replaces: util-linux-dev
 Description: Miscellaneous system utilities
 Filename: dists/stable/main/binary-aarch64/util-linux_2.42.4_aarch64.deb
-Size: 797820
-MD5Sum: 7f5d0499723c94689d2c792d116dd32f
-SHA1: 5c0414949def5d640cc346f0f5a9482290c4c33e
-SHA256: 52a3cd17f6ffcda9cd076b463cb1083d044bacaa60ea6037c63719d0b8186d96
-SHA512: 2fbb577c9c303a157c4b513e51cae6bdbe5d128da43aa9d2fadda0292f2288151dc10d6e0cf182ce4d832dccab8d901f14942638413b6b583ed669e6295418e1
+Size: 779296
+MD5Sum: 1046e92bb4304a09ce363726fc195b29
+SHA1: c79fdb93bda3ad772debac7277566819d70a93a5
+SHA256: e64bec11c84ab7a961e4bfc56ecf1b24105f20cb560b9529d73e47586b7c0f4b
+SHA512: 4a9f6c4f90cce1675f167d665bf590d7c7cd1bde75c59d05f5d0200e7627172f0f934bfd6dbc5860323b7c2b1844b74b454a224fd6af2f530c4804dba20d30c3
 
 Package: uuid-utils
 Architecture: aarch64
