@@ -16,20 +16,25 @@
 | 패키지 빌드 레시피·패치 (`packages/…`) | [termux/termux-packages](https://github.com/termux/termux-packages) — 고정 판 `packaging/jc-packages.conf` 의 `JC_TERMUX_PACKAGES_REF` | **각 패키지의 라이선스** (bash 레시피는 bash 와 같은 GPL 등) |
 | 빌드 도구 (`scripts/`·`build-package.sh` 등) | termux/termux-packages | Apache License 2.0 |
 | 각 패키지의 원본 프로그램 | 각 프로젝트 (GNU·OpenSSH·Git …) | 각자의 라이선스 (GPL·BSD·MIT …) |
-| `packaging/`·`runner/`·워크플로 | JC (JC Terminal 1판의 우리 스크립트를 바탕으로) | — |
+| `packaging/`·워크플로 | JC (JC Terminal 1판의 우리 스크립트를 바탕으로) | — |
 
 우리가 termux-packages 에 더하는 것은 `packaging/patch-termux-packages.sh` 의 패치뿐이다: 앱 ID(→ 설치 경로)를 바꾸고, 경로 변수를 내보내고,
-`termux-keyring` 에 이 저장소의 공개 키를 더한다. "Termux" 는 Termux 프로젝트의 이름이며 이 저장소는 Termux 와 관계가 없다.
+`termux-keyring` 에 이 저장소의 공개 키를 더하고, 의존성을 이 저장소에서 받게 하고(`repo.json`), `termux-tools` 가 `termux-am-socket` 을
+요구하지 않게 한다(그 소켓 서버는 Termux 앱에만 있다). "Termux" 는 Termux 프로젝트의 이름이며 이 저장소는 Termux 와 관계가 없다.
 
 ### 소스 받기 (GPL 등)
 
-배포한 판마다 **구운 패키지의 원본 소스와 레시피·패치**를 그 릴리스의 `sources-<태그>.tar` 로 함께 올린다. 그 판의 바이너리를 배포하는 동안 지우지 않는다.
-apt 저장소의 패키지는 가장 가까운 부트스트랩 릴리스의 소스 묶음과 같은 판의 레시피로 구운 것이다. 찾는 판이 없으면 이 저장소의 이슈로 요청하면 된다.
+릴리스 [`sources`](https://github.com/jc-open-projects/jc-terminal-packages/releases/tag/sources) 에 레시피·판마다 `src-<레시피>-<판>.tar`
+(원본 소스 + 레시피·패치)를 쌓는다. 패키지를 굽거나 부트스트랩을 낼 때 그 판의 묶음이 없으면 올리고, 옛 판도 지우지 않는다.
+2026-10-05 이전에 구운 패키지 가운데 묶음이 없는 것은 이슈로 요청하면 올린다.
 
 ## 굽기
 
-`Actions → Packages and bootstrap → Run workflow` (수동 실행만). 러너는 조직의 self-hosted `macbook-linux` ([runner/](runner/README.md)).
+`Actions → Packages and bootstrap → Run workflow` (수동 실행만). GitHub 호스팅 러너(`ubuntu-latest`)에서 공식 빌드 이미지로 굽는다.
 
-1. `packages` 를 비우고 실행 → 부트스트랩 묶음을 굽고 apt 저장소에 올린다.
-2. `make_bootstrap` 을 켜고 실행 → 부트스트랩 zip 을 만들고(경로 확인) 서명해 릴리스. 릴리스 설명의 `jcBootstrapUrl`·`jcBootstrapSha256` 을 앱 저장소의 `gradle.properties` 에 넣는다.
-3. `packages` 에 `repo-extra` → vim·htop·python·rsync·ripgrep·jq·make·clang (오래 걸린다).
+- **plan** — `packages`(기본 `all` = 부트스트랩 묶음 + 저장소 추가분)의 레시피 가운데 **apt 저장소에 같은 판이 없는 것만** 고른다.
+- **build** — 레시피마다 잡 하나(6시간 한도). 의존성은 이 저장소의 deb 를 서명 확인 후 받아 쓰고(`-i`), 없으면 그 자리에서 굽는다.
+- **publish** — 새 deb 를 apt 저장소(gh-pages)에 더해 서명·푸시하고, 소스 묶음을 `sources` 에 올린다.
+- **bootstrap** (`make_bootstrap`) — 부트스트랩 zip 을 만들고 경로·빠진 패키지를 확인해 서명·릴리스. 릴리스 설명의 `jcBootstrapUrl`·`jcBootstrapSha256` 을 앱 저장소의 `gradle.properties` 에 넣는다.
+
+termux-packages 고정 판을 올리거나 레시피를 바꾸면 판이 달라진 레시피만 다시 굽는다. 다 다시 구우려면 `force_rebuild`.

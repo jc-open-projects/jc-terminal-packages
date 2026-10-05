@@ -11,6 +11,9 @@
 #    com.termux 로 굽는다 (1판에서 login·pkg 에 com.termux 가 박혔던 원인).
 # 3. termux-am 의 BuildConfig 앱 이름.
 # 4. termux-keyring 에 우리 저장소 공개 키를 더한다 — apt 가 우리 서명을 믿게 (DEC-012).
+# 5. repo.json 을 우리 저장소로 — 의존성을 우리 deb 에서 받는다 (-i, DEC-015).
+# 6. build-package.sh 가 의존성 저장소 서명을 우리 키로 확인하게.
+# 7. termux-tools 의 의존에서 termux-am-socket 을 뺀다 (DEC-016).
 set -euo pipefail
 
 here="$(cd "$(dirname "$0")" && pwd)"
@@ -73,13 +76,38 @@ if [ -d "$kr" ] && ! grep -q "jc-terminal-packages.gpg" "$kr/build.sh"; then
 	echo "[*] termux-keyring 에 우리 공개 키를 더했습니다"
 fi
 
-# 5. 도구 모음을 fuse-overlayfs 로 겹치지 않고 처음 한 번 복사한다 — 러너 컨테이너에 /dev/fuse·SYS_ADMIN 을
-#    주지 않기 위해서 (공개 저장소의 러너, runner/README.md). 디스크를 몇 GB 더 쓴다.
-tc="$tp/scripts/build/toolchain/termux_setup_toolchain_30.sh"
-if [ -f "$tc" ] && grep -q 'fuse-overlayfs' "$tc" && ! grep -q 'JC Terminal: overlay 대신 복사' "$tc"; then
-	perl -0pi -e 's|\tif ! mountpoint -q "\$\{TERMUX_STANDALONE_TOOLCHAIN\}"; then\n\t\tfuse-overlayfs \\\n.*?\n\tfi\n|\t# JC Terminal: overlay 대신 복사 (packaging/patch-termux-packages.sh)\n\tif [ ! -f "\${TERMUX_STANDALONE_TOOLCHAIN}/.jc-copied" ]; then\n\t\tcp -a "\${NDK}/toolchains/llvm/prebuilt/linux-x86_64/." "\${TERMUX_STANDALONE_TOOLCHAIN}/"\n\t\ttouch "\${TERMUX_STANDALONE_TOOLCHAIN}/.jc-copied"\n\tfi\n|s' "$tc"
-	grep -q 'JC Terminal: overlay 대신 복사' "$tc" || { echo "[!] 도구 모음 overlay 를 바꾸지 못했습니다 — 스크립트가 바뀐 것 같습니다" >&2; exit 1; }
-	echo "[*] 도구 모음을 overlay 대신 복사하게 바꿨습니다"
+# 5. 의존성을 받을 저장소를 우리 apt 저장소로 (build-package.sh -i) — 공식 deb 는 com.termux 경로라 섞으면 안 된다.
+#    키(packages, x11-packages …)는 레시피 폴더 이름이라 그대로 두고 주소만 바꾼다 (DEC-015).
+rj="$tp/repo.json"
+if [ -f "$rj" ] && ! grep -qF "$JC_REPO_URL" "$rj"; then
+	jq --arg url "$JC_REPO_URL" 'reduce (del(.pkg_format) | keys[]) as $k (.; .[$k] |= (.url = $url | .distribution = "stable" | .component = "main"))' "$rj" > "$rj.new"
+	mv "$rj.new" "$rj"
+	echo "[*] repo.json 을 우리 저장소로 바꿨습니다"
+fi
+
+# 6. 의존성 저장소의 서명을 우리 키로 확인한다 — build-package.sh 는 Termux 키만 가져온다
+bp="$tp/build-package.sh"
+if ! grep -q "JC Terminal: 우리 저장소 키" "$bp"; then
+	perl -0pi -e 's|(\t# Setup PGP keys for verifying integrity of dependencies\.\n)|$1\t# JC Terminal: 우리 저장소 키 (packaging/patch-termux-packages.sh)\n\tgpg --list-keys 5F52ACE481978987DE01FDA25123A9A806CBC3F5 > /dev/null 2>&1 \|\| {\n\t\tgpg --import "\$TERMUX_SCRIPTDIR/packages/termux-keyring/jc-terminal-packages.gpg"\n\t\tgpg --no-tty --command-file <(echo -e "trust\\n5\\ny") --edit-key 5F52ACE481978987DE01FDA25123A9A806CBC3F5\n\t}\n|' "$bp"
+	grep -q "JC Terminal: 우리 저장소 키" "$bp" || { echo "[!] build-package.sh 에 키 가져오기를 넣지 못했습니다 — 스크립트가 바뀐 것 같습니다" >&2; exit 1; }
+	echo "[*] 의존성 확인에 우리 키를 더했습니다"
+fi
+
+# 7. termux-tools 가 termux-am-socket 을 요구하지 않게 (DEC-016) — 그 소켓 서버는 Termux 앱에만 있다.
+#    판(REVISION)을 하나 올려 이미 설치된 기기도 `pkg upgrade` 로 바뀐 의존을 받는다.
+tt="$tp/packages/termux-tools/build.sh"
+if [ -f "$tt" ] && ! grep -q "JC Terminal: termux-am-socket 뺌" "$tt"; then
+	grep -q 'termux-am-socket' "$tt" || { echo "[!] termux-tools 의 의존에 termux-am-socket 이 없습니다 — 레시피가 바뀌었으면 이 단계를 맞춰야 합니다" >&2; exit 1; }
+	perl -pi -e 's/,\s*termux-am-socket(\s*\([^)]*\))?//' "$tt"
+	rev="$(sed -n 's/^TERMUX_PKG_REVISION=//p' "$tt")"
+	if [ -n "$rev" ]; then
+		perl -pi -e "s/^TERMUX_PKG_REVISION=.*/TERMUX_PKG_REVISION=$((rev + 1))/" "$tt"
+	else
+		perl -pi -e 's/^(TERMUX_PKG_VERSION=.*)$/$1\nTERMUX_PKG_REVISION=1/' "$tt"
+	fi
+	echo "# JC Terminal: termux-am-socket 뺌 (packaging/patch-termux-packages.sh, DEC-016)" >> "$tt"
+	grep -q 'termux-am-socket' <(grep '^TERMUX_PKG_DEPENDS' "$tt") && { echo "[!] termux-tools 의존에서 termux-am-socket 을 빼지 못했습니다" >&2; exit 1; }
+	echo "[*] termux-tools 의존에서 termux-am-socket 을 뺐습니다 (REVISION $(sed -n 's/^TERMUX_PKG_REVISION=//p' "$tt"))"
 fi
 
 # 패치가 실제로 경로에 반영되는지 확인한다 (bash 4 이상 — properties.sh 가 연관 배열을 쓴다)
