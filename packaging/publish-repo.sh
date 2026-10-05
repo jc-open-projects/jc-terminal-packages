@@ -28,12 +28,17 @@ for attempt in 1 2 3; do
 		(cd pages && git checkout -q --orphan "$br" && git rm -rfq --cached . && find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +)
 	fi
 	find pages -name '*.deb' -exec cp {} all-debs/ \; 2>/dev/null || true
-	# 새로 구운 패키지의 옛 판은 뺀다 (이름_판_아키.deb)
+	# 이미 올린 같은 판(같은 파일 이름)은 바꾸지 않는다 — 의존성을 다시 구운 것이 같은 판으로 덮이면 기기가 같은 판을
+	# 다시 설치한다. 새 판이면 그 패키지의 옛 판을 빼고 더한다 (이름_판_아키.deb)
+	added=0
 	for f in "$new"/*.deb; do
-		p="$(basename "$f")"; p="${p%%_*}"
-		find all-debs -name "${p}_*.deb" -delete
+		b="$(basename "$f")"
+		[ -e "all-debs/$b" ] && continue
+		find all-debs -name "${b%%_*}_*.deb" -delete
+		cp "$f" all-debs/
+		added=$((added + 1))
 	done
-	cp -f "$new"/*.deb all-debs/
+	echo "[*] 새 판 deb: $added"
 	echo "[*] deb 합계: $(ls all-debs | wc -l)"
 	find pages -mindepth 1 -maxdepth 1 ! -name .git ! -name README.md -exec rm -rf {} +
 	python3 /tmp/tar/termux-apt-repo all-debs pages stable main

@@ -107,11 +107,23 @@ if [ -f "$tt" ] && ! grep -q "JC Terminal: termux-am-socket 뺌" "$tt"; then
 	perl -pi -e 's/,\s*termux-am-socket(\s*\([^)]*\))?//' "$tt"
 	rev="$(sed -n 's/^TERMUX_PKG_REVISION=//p' "$tt")"
 	if [ -n "$rev" ]; then
-		perl -pi -e "s/^TERMUX_PKG_REVISION=.*/TERMUX_PKG_REVISION=$((rev + 1))/" "$tt"
+		perl -pi -e "s/^TERMUX_PKG_REVISION=.*/TERMUX_PKG_REVISION=$((rev + JC_TERMUX_TOOLS_REVISION_BUMP))/" "$tt"
 	else
-		perl -pi -e 's/^(TERMUX_PKG_VERSION=.*)$/$1\nTERMUX_PKG_REVISION=1/' "$tt"
+		perl -pi -e 's/^(TERMUX_PKG_VERSION=.*)$/$1\nTERMUX_PKG_REVISION='"$JC_TERMUX_TOOLS_REVISION_BUMP"'/' "$tt"
 	fi
-	echo "# JC Terminal: termux-am-socket 뺌 (packaging/patch-termux-packages.sh, DEC-016)" >> "$tt"
+	# 미러는 우리 저장소 하나만 — 공식 미러 목록을 빼고 mirror-default 를 conffile 로 싣는다
+	cp "$here/mirror-default" "$(dirname "$tt")/jc-mirror-default"
+	cat >> "$tt" <<'EOF'
+# JC Terminal: termux-am-socket 뺌 (packaging/patch-termux-packages.sh, DEC-016)
+# JC Terminal: 미러는 우리 저장소 하나만 — 위의 termux_step_post_make_install 을 대신한다
+termux_step_post_make_install() {
+	local m="$TERMUX_PREFIX/etc/termux/mirrors" conf
+	rm -rf "$m"
+	install -Dm644 "$TERMUX_PKG_BUILDER_DIR/jc-mirror-default" "$m/default"
+	conf="$(cat "$TERMUX_PKG_BUILDDIR/conffiles")"
+	TERMUX_PKG_CONFFILES="$(printf '%s\n' "$conf" | grep -v 'termux/mirrors/'; printf '%s\n' "$conf" | grep 'termux/mirrors/default$')"
+}
+EOF
 	grep -q 'termux-am-socket' <(grep '^TERMUX_PKG_DEPENDS' "$tt") && { echo "[!] termux-tools 의존에서 termux-am-socket 을 빼지 못했습니다" >&2; exit 1; }
 	echo "[*] termux-tools 의존에서 termux-am-socket 을 뺐습니다 (REVISION $(sed -n 's/^TERMUX_PKG_REVISION=//p' "$tt"))"
 fi

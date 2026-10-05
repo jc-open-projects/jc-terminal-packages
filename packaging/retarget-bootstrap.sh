@@ -27,12 +27,9 @@ if [ -d "$mirrors" ]; then
 else
 	mkdir -p "$mirrors"
 fi
-cat > "$mirrors/default" <<EOF
-# This file is sourced by pkg
-# JC Terminal 패키지 저장소 (jc-open-projects/jc-terminal-packages). 공식 Termux 저장소는 경로가 달라 쓸 수 없다.
-WEIGHT=10
-MAIN="$JC_REPO_URL"
-EOF
+# termux-tools 패키지가 같은 파일을 conffile 로 싣는다(patch-termux-packages.sh 7) — 바이트까지 같아야
+# `pkg upgrade` 때 dpkg 가 설정 파일을 어떻게 할지 묻지 않는다
+cp "$here/mirror-default" "$mirrors/default"
 
 # 2) apt 가 바로 보는 주소 — 서명된 저장소 (InRelease). 우리 키는 termux-keyring 이 trusted.gpg.d 에 둔다
 mkdir -p "$work/etc/apt"

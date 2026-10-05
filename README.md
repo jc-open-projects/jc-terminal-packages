@@ -37,4 +37,4 @@
 - **publish** — 새 deb 를 apt 저장소(gh-pages)에 더해 서명·푸시하고, 소스 묶음을 `sources` 에 올린다.
 - **bootstrap** (`make_bootstrap`) — 부트스트랩 zip 을 만들고 경로·빠진 패키지를 확인해 서명·릴리스. 릴리스 설명의 `jcBootstrapUrl`·`jcBootstrapSha256` 을 앱 저장소의 `gradle.properties` 에 넣는다.
 
-termux-packages 고정 판을 올리거나 레시피를 바꾸면 판이 달라진 레시피만 다시 굽는다. 다 다시 구우려면 `force_rebuild`.
+termux-packages 고정 판을 올리거나 레시피를 바꾸면 판이 달라진 레시피만 다시 굽는다. 다 다시 구우려면 `force_rebuild` — 다만 저장소에 이미 있는 **같은 판은 바꾸지 않는다**(기기가 같은 판을 다시 설치하지 않게). 우리 패치로 내용이 바뀌면 판을 올린다 (예: `JC_TERMUX_TOOLS_REVISION_BUMP`).

@@ -1,0 +1,4 @@
+# This file is sourced by pkg
+# JC Terminal 패키지 저장소 (jc-open-projects/jc-terminal-packages). 공식 Termux 저장소는 경로가 달라 쓸 수 없다.
+WEIGHT=10
+MAIN="https://jc-open-projects.github.io/jc-terminal-packages"
