@@ -27,6 +27,7 @@ for pkg in "$@"; do
 	[ -n "${seen[$recipe]:-}" ] && continue
 	seen["$recipe"]=1
 	want="$(jc_recipe_version "$tp" "$dir")"
+	[ -n "$want" ] || { echo "[!] $recipe 의 판을 알아내지 못했습니다" >&2; exit 1; }
 	got="${have[$recipe]:-}"
 	if $force || [ "$want" != "$got" ]; then
 		echo "[*] $recipe: 저장소 ${got:-없음} → $want" >&2

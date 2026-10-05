@@ -18,7 +18,8 @@ jc_recipe_dir() {
 }
 
 jc_recipe_version() {
-	local tp="$1" dir="$2"
+	local tp dir
+	tp="$(cd "$1" && pwd)"; dir="$(cd "$2" && pwd)"   # 아래에서 cd 하므로 절대 경로로
 	(
 		cd "$tp" || exit 1
 		set +eu

@@ -26,6 +26,7 @@ for pkg in "$@"; do
 	[ -n "${seen[$recipe]:-}" ] && continue
 	seen["$recipe"]=1
 	ver="$(jc_recipe_version "$tp" "$dir")"
+	[ -n "$ver" ] || { echo "[!] $recipe 의 판을 알아내지 못했습니다" >&2; exit 1; }
 	name="src-$recipe-${ver//[:\/]/_}.tar"
 	[ -n "${skip[$name]:-}" ] && { echo "[ ] $name 있음" >&2; continue; }
 
