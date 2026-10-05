@@ -168,6 +168,21 @@ SHA1: 0631474ea98ccc6d79d8515889ba9fe3ef32480a
 SHA256: a106684d5a443b2bfa29a3f17c6ee75f8bd446c2e2d1371355dd159a33346ec8
 SHA512: a3c61b30a619892986830326a470a56700933909ad7b927f964f60d75c59273f327916f42477e67466dda378d68d2c07c858811c299ae23e17d075e589aecec6
 
+Package: ruby-ri
+Architecture: all
+Installed-Size: 64044
+Maintainer: @termux
+Version: 4.0.7
+Homepage: https://www.ruby-lang.org/
+Depends: ruby (= 4.0.7)
+Description: Ruby documentation index
+Filename: dists/stable/main/binary-all/ruby-ri_4.0.7_all.deb
+Size: 1709372
+MD5Sum: 9d3bccebbec36d2f63e6d7f6b90f8636
+SHA1: 369802f381ec0ab566d143153f78ee8a556c0046
+SHA256: 68cdf095f08257813cdfb42382b5ad5ad1ace0f0f2133c08a2a4c9a1492bdec1
+SHA512: 63b164e4cffc03883b4ebbf2962eba5949168e046dee6846070f95e486860d4b2babdc36ad2441b0f8ea521023b6146a1da99fa1ce04061d6dd5ace3302c43db
+
 Package: termux-am
 Architecture: all
 Installed-Size: 620
